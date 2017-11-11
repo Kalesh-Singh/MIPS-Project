@@ -9,8 +9,9 @@ interger.
   + Otherwise, the program prints out the message, "Invalid hexadecimal number.".
 
 ## Requirements: ##
-	A MIPS simulator is required to run this program. The two recommended simulators are QtSpim 
-	and MARS. You will also be rewuired to have Java SE installed on your system if you decide 
+  + A MIPS simulator is required to run this program. 
+  + The two recommended simulators are QtSpim and MARS. 
+  + You will also be rewuired to have Java SE installed on your system if you decide 
 	to go with MARS.
 
 ### Download Links: ###
