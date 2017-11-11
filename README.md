@@ -4,9 +4,9 @@ This MIPS Program converts up to 32-bit hexadecimal numbers to their correspondi
 interger.
 
 ## Features: ##
-	* Reads a string of up to 8 characters from user input.
-	* If the input string is made up of only characters form the sets {'0' to '9'}, {'a' to 'f'} and {'A' to 'F'}, the program prints out the corresponding unsigned decimal integer.
-	* Otherwise, the program prints out the message, "Invalid hexadecimal number.".
+  + Reads a string of up to 8 characters from user input.
+  + If the input string is made up of only characters form the sets {'0' to '9'}, {'a' to 'f'} and {'A' to 'F'}, the program prints out the corresponding unsigned decimal integer.
+  + Otherwise, the program prints out the message, "Invalid hexadecimal number.".
 
 ## Requirements: ##
 	A MIPS simulator is required to run this program. The two recommended simulators are QtSpim 
