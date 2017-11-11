@@ -1,6 +1,6 @@
 .data
 	error_msg:	.asciiz "Invalid hexadecimal number." 
-	input_str:	.space 8 	# we need 8 bytes to read in at most 8 ascii characters
+	input_str:	.space 9 	# we need 8 bytes to read in at most 8 characters and 1 for endline character
 	prompt:		.asciiz "Please enter a 8-digit or smaller hexadecimal number: "
 .text
 	main:
@@ -8,7 +8,7 @@
 	# Get user input
 		li $v0, 8		# Tells system to get user input from the keyboard as text
 		la $a0, input_str
-		li $a1, 8		# Tells the system the maximum number of bytes to read		
+		li $a1, 9		# Tells the system the maximum number of bytes to read		
 		syscall	
 
 	# Validate user input
