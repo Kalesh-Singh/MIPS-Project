@@ -9,7 +9,7 @@
 		li $v0, 8		# Tells system to get user input from the keyboard as text
 		la $a0, input_str
 		li $a1, 8		# Tells the system the maximum number of bytes to read		
-	
+		syscall	
 
 	# Validate user input
 
