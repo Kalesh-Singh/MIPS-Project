@@ -13,7 +13,7 @@ interger.
 	and MARS. You will also be rewuired to have Java SE installed on your system if you decide 
 	to go with MARS.
 
-	### Download Links: ###
+	Download Links:
 		QtSpim	http://spimsimulator.sourceforge.net/
 		MARS	http://courses.missouristate.edu/KenVollmar/mars/download.htm
 
