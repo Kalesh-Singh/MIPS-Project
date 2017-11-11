@@ -1,4 +1,4 @@
-------------------------------------------------------------- Computer Organization I - MIPS Project ------------------------------
+------------------------------------------------------------- Computer Organization I - MIPS Project ------------------------------------------------------------- 
 
 This MIPS Program converts up to 32-bit hexadecimal numbers to their corresponding decimal 
 interger.
