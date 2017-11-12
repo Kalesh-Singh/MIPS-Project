@@ -40,6 +40,10 @@
 
 		Loop:
             add $t0, $s0, $a1       	# Increment the address
+			lb $a2, 0($t0)				# Stores the first char in $t0 to $a2
+
+			# Do checks for valid character
+
 		 	jal AddDigit				# Call AddDigit
 		 	beq $a1, $t1, PrintDec		# Exit Loop if $a0 == 7
 			sll $s1, $s1, 4				# Shift $s1 left by 4
@@ -73,9 +77,10 @@
 
 	AddDigit:
 		# Adds the digit in $a2 to $s1
-		lb $t3, 0($t0)
-		sub $t3, $t3, $s2
-		or $s1, $s1, $t3
+		# lb $t3, 0($t0)
+		# sub $t3, $t3, $s2
+		# sub $a2, $a2, $s2
+		or $s1, $s1, $a2
 		# sll $s1, $s1, 4 		# Moved to within loop	
 		jr $ra
 
