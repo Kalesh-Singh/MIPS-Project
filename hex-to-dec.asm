@@ -20,35 +20,71 @@
 		syscall
 
 		# Get user input
-		li $v0, 8		# Tells system to get user input from the keyboard as text
+		li $v0, 8			# Tells system to get user input from the keyboard as text
 		la $a0, user_input
-		li $a1, 9		# Tells the system the maximum number of bytes to read		
+		li $a1, 9			# Tells the system the maximum number of bytes to read		
 		syscall	
-
-		# Validate user input
-
 	
-		# If input is valid, calculate corresponding decimal value
+		# Calculate corresponding decimal value
 
 		la $s0, user_input		# Store address of input string in $s0
-	    add $s1, $zero, $zero	# Initialize $s1 to zero it will be used to store the decimal result
+	    	add $s1, $zero, $zero		# Initialize $s1 to zero it will be used to store the decimal result
 		lb $s2, char_0			# Initialize the $s2 to the char value of '0'
 		addi $a1, $zero, 0		# Initialize offset to 0
 		addi $t1, $zero, 7		# Set offset limit to 7
 		
-		jal PrintNewLine        # Go to next line in output
+		jal PrintNewLine        	# Go to next line in output
 
 		Loop:
-            add $t0, $s0, $a1       	# Increment the address
-			lb $a2, 0($t0)				# Stores the first char in $t0 to $a2
+            		add $t0, $s0, $a1       				# Increment the address
+			lb $a2, 0($t0)						# Stores the first char in $t0 to $a2
 
 			# Do checks for valid character
+			lb $t6, char_g						# Load character code for 'g' into $t6
+			slt $t5, $a2, $t6					# Check if current char code is less than that of 'g'
+			beq $t5, $zero, Invalid					# If not less than 'g' --> Invalid
 
-		 	jal AddDigit				# Call AddDigit
-		 	beq $a1, $t1, PrintDec		# Exit Loop if $a0 == 7
-			sll $s1, $s1, 4				# Shift $s1 left by 4
-			addi $a1, $a1, 1			# Increse the offet
-		 	j Loop
+			lb $t6, char_a						# Load character code for 'a' into $t6
+			slt $t5, $a2, $t6					# Check if current char code is less than that of 'a'
+			beq $t5, $zero, Between_a_and_f				# If not less than 'a' --> Between a & f
+
+			lb $t6, char_G						# Load char code for 'G' into $t6
+			slt $t5, $a2, $t6					# Check if current char code is less than that of 'G'
+			beq $t5, $zero, Invalid					# If not less than 'G' --> Invalid
+
+			lb $t6, char_A						# Load char code for 'A' into $t6
+			slt $t5, $a2, $t6					# Check if current char code is less than that of 'A'
+			beq $t5, $zero, Between_A_and_F				# If not less than 'A' --> Between A & F
+
+			lb $t6, char_colon					# Load char code for ':' into $t6
+			slt $t5, $a2, $t6					# Check if current char code is less than that of ':'
+			beq $t5, $zero, Invalid					# If not less than ':' --> Invalid
+			
+			lb $t6, char_0						# Load char code for '0' into $t6
+			slt $t5, $a2, $t6					# Check if current char code is less than than of '0'
+			bne $t5, $zero, Invalid				# If less than '0' --> Invalid			
+
+			# Else it is between 0 and 9
+			lb $s2, char_0                  			# Set $s2 to char code of '0'
+            		j Continue                      			# Continue
+
+
+			Between_A_and_F:
+				lb $s2, char_A          			# Set $s2 to char code of 'A'
+                		addi $s2, $s2, -10      			# Subtract 10 from $s2 since 'A' = 10 in hex
+                		j Continue              			# Continue
+			
+			Between_a_and_f:
+				lb $s2, char_a					# Set $s2 to char code of 'a'
+				addi $s2, $s2, -10				# Subtract 10 from $s2 since 'a' = 10 in hex 
+				j Continue					# Continue
+			
+			Continue:
+		 		jal AddDigit					# Call AddDigit
+		 		beq $a1, $t1, PrintDec				# Exit Loop if $a0 == 7
+				sll $s1, $s1, 4					# Shift $s1 left by 4
+				addi $a1, $a1, 1				# Increse the offet
+		 		j Loop
 
 		
 		# Print decimal value
@@ -62,24 +98,27 @@
 			sw $s1, decimal_result
 			li $v0, 1
 			lw $a0, decimal_result
-			syscall	
+			syscall
+			j Exit
 
 	
 		# Else, if input is invalid print error_message
-			# li $v0, 4
-			# la $a0, error_msg
-			# syscall
+		Invalid:
+			li $v0, 4
+			la $a0, error_msg
+			syscall
+			j Exit
 
 	
 		# Exit the program
+		Exit:
 			li $v0, 10
 			syscall
 
 	AddDigit:
 		# Adds the digit in $a2 to $s1
-		# lb $t3, 0($t0)
-		# sub $t3, $t3, $s2
-		# sub $a2, $a2, $s2
+		# lb $t3, 0($t0)    		# Moved to within loop
+		sub $a2, $a2, $s2
 		or $s1, $s1, $a2
 		# sll $s1, $s1, 4 		# Moved to within loop	
 		jr $ra
