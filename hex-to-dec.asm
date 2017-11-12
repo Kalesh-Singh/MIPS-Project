@@ -9,7 +9,7 @@
 	char_colon: .byte ':'
 	user_input: .space 9	# we need 8 bytes to read in at most 8 characters and 1 for endline character
 	valid_msg:	.asciiz "The character is a valid hex"
-	new_line: .asciiz "/n"
+	new_line_char: .byte 10
 	decimal_value_msg:	.asciiz "The corresponding decimal value is: "
 	decimal_result: .word 0
 .text
@@ -124,7 +124,7 @@
 		jr $ra
 
 	PrintNewLine:
-		la $a0, new_line
-		li $v0, 4
+		lb $a0, new_line_char
+		li $v0, 11
 		syscall
 		jr $ra
