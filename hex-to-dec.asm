@@ -1,19 +1,21 @@
 .data
-	error_msg:	.asciiz "Invalid hexadecimal number." 
-	prompt:		.asciiz "Please enter a 8-digit or smaller hexadecimal number: "
-	char_a: .byte 'a'
-	char_g: .byte 'g'	
-	char_A: .byte 'A'
-	char_G:	.byte 'G'
-	char_0: .byte '0'
-	char_colon: .byte ':'
-	user_input: .space 9	# we need 8 bytes to read in at most 8 characters and 1 for endline character
-	valid_msg:	.asciiz "The character is a valid hex"
-	new_line_char: .byte 10
-	decimal_value_msg:	.asciiz "The corresponding decimal value is: "
-	decimal_result: .word 0
+	error_msg:		.asciiz 	"Invalid hexadecimal number." 
+	prompt:			.asciiz 	"Please enter a 8-digit or smaller hexadecimal number: "
+	char_a: 		.byte 		'a'
+	char_g: 		.byte 		'g'	
+	char_A: 		.byte 		'A'
+	char_G:			.byte 		'G'
+	char_0: 		.byte 		'0'
+	char_colon: 		.byte 		':'
+	user_input: 		.space 		 9	# we need 8 bytes to read in at most 8 characters and 1 for endline character
+	valid_msg:		.asciiz 	"The character is a valid hex"
+	decimal_value_msg:	.asciiz 	"The corresponding decimal value is: "
+	decimal_result: 	.word 		0
+	new_line_char: 		.byte 		10
+	end_line_char: 		.byte 		0
+	space_char: 		.byte 		32
 .text
-	main:
+	main:	
 		# Prompt the user for input
 		li $v0, 4
 		la $a0, prompt
@@ -29,13 +31,63 @@
 
 		la $s0, user_input		# Store address of input string in $s0
 	    	add $s1, $zero, $zero		# Initialize $s1 to zero it will be used to store the decimal result
-		lb $s2, char_0			# Initialize the $s2 to the char value of '0'
-		addi $a1, $zero, 0		# Initialize offset to 0
-		addi $t1, $zero, 7		# Set offset limit to 7
-		
-		jal PrintNewLine        	# Go to next line in output
 
-		Loop:
+# ------------------------------------------------------------
+
+		# We will use $s3, $s4, $s5 to store the char codes of ' ', NUL and '\n' respectively.
+		lb $s3, space_char
+		lb $s4, end_line_char
+		lb $s5, new_line_char
+
+		addi $t7, $zero, 0              			# Initialize offset to zero
+	
+		# We will loop through the string to find the end of the input i.e. either NUL or '\n'
+		Loop1:
+			add $t0, $s0, $t7				# Increment the address
+			lb $t6, 0($t0)					# Store the first char of $t0 to $t6
+			beq $t6, $s4, EndOfString			# If current char is end_line_char -- > End of string
+ 			beq $t6, $s5, EndOfString			# If current char is new_line_char --> End of string
+			addi $t7, $t7, 1				# Increment the offset
+			j Loop1			
+	
+		EndOfString:
+			add $t8, $zero, $t7              		# Set offset limit to $t7
+		
+		# We will loop through the string checking for leading spaces and find the start index
+		addi $t7, $zero, 0                  			# Initialize offset to zero
+		
+		Loop2: 
+			add $t0, $s0, $t7               		# Increment the address
+            		lb $t6, 0($t0)                  		# Store the first char of $t0 to $t6
+            		beq $t7, $t8, Invalid       			# If offset is offset limit -- > Invalid
+            		bne $t6, $s3, EndIndex     			# If current char is not space  --> EndIndex
+            		addi $t7, $t7, 1                		# Increment the offset
+            		j Loop2
+            		
+		# NOTE: START INDEX --> $t7
+		EndIndex:
+			addi $t8, $t8, -1				# Inititalize offset to offset limit - 1
+
+
+		# We will loop through the string in reverse checking for lagging spaces and find the end index
+		Loop3:
+            		add $t0, $s0, $t8               		# Increment the address
+            		lb $t6, 0($t0)                  		# Store the first char of $t0 to $t6
+            		bne $t6, $s3, InitializeIndices     	# If current char is not space  --> InitializeIndices
+            		addi $t8, $t8, -1               		# Decrement the offset
+            		j Loop3
+
+		
+#-------------------------------------------------------------
+		# NOTE: END INDEX --> $t8
+
+		InitializeIndices:
+			add $a1, $zero, $t7				# Initialize offset to 0
+			add $t1, $zero, $t8				# Set offset limit to 7
+		
+		jal PrintNewLine        				# Go to next line in output
+
+		Loop4:
             		add $t0, $s0, $a1       				# Increment the address
 			lb $a2, 0($t0)						# Stores the first char in $t0 to $a2
 
@@ -84,7 +136,7 @@
 		 		beq $a1, $t1, PrintDec				# Exit Loop if $a0 == 7
 				sll $s1, $s1, 4					# Shift $s1 left by 4
 				addi $a1, $a1, 1				# Increse the offet
-		 		j Loop
+		 		j Loop4
 
 		
 		# Print decimal value
