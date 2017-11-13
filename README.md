@@ -6,8 +6,8 @@ interger.
 ## Features: ##
   + Reads a string of up to 8 characters from user input.
   + If the input string is made up of only characters form the sets {'0' to '9'}, {'a' to 'f'} and {'A' to 'F'}, the program prints out the corresponding unsigned decimal integer.
-  + Otherwise, the program prints out the error message, "Invalid hexadecimal number.".
-  + Note: The program ignores leading and lagging spaces in the input and will produce the error message in such cases.
+  + Otherwise, the program prints out the error message, "Invalid hexadecimal number.".						
+  + **Note:The program ignores leading and lagging spaces in the input and will NOT produce the error message in such cases.**
 
 ## Requirements: ##
   + A MIPS simulator is required to run this program. 
