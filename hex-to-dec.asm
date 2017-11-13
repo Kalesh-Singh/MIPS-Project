@@ -146,7 +146,7 @@
 
 			# Prints the decimal value of $s1
 			sw $s1, decimal_result
-			li $v0, 1
+			li $v0, 36
 			lw $a0, decimal_result
 			syscall
 			j Exit
