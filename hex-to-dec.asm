@@ -91,7 +91,7 @@
             		add $t0, $s0, $a1       			# Increment the address
 			lb $a2, 0($t0)					# Stores the first char in $t0 to $a2
 
-			# Do checks for valid character
+			#-------------------------------- Checks for Valid Character -------------------------------------------
 			lb $t6, char_g					# Load character code for 'g' into $t6
 			slt $t5, $a2, $t6				# Check if current char code is less than that of 'g'
 			beq $t5, $zero, Invalid				# If not less than 'g' --> Invalid
@@ -137,9 +137,10 @@
 				sll $s1, $s1, 4				# Shift $s1 left by 4
 				addi $a1, $a1, 1			# Increse the offet
 		 		j Loop4
+			# ------------------------------------------------------------------------------------------------------
 
 		
-        # ----------------------------------Printing the Unsigned Decimal Value-----------------------------------------
+        	# ----------------------------------Printing the Unsigned Decimal Value-----------------------------------------
 
 		PrintDec:
 			# Prints the msg, "The corresponding decimal value is: "
