@@ -138,20 +138,67 @@
 				addi $a1, $a1, 1			# Increse the offet
 		 		j Loop4
 
-		# Print decimal value
+		
+        # ----------------------------------Printing the Unsigned Decimal Value-----------------------------------------
+
 		PrintDec:
+			# Prints the msg, "The corresponding decimal value is: "
 			li $v0, 4
 			la $a0, decimal_value_msg
 			syscall
+			
+			# We will divide $s1 by 10 until the quotient is zero
+			# We will store the char code of all the remainder digits on the stack
+			# We will print each char in reverse from the stack
+			
+			
+			addi $t4, $zero, 10				# Initialize $t4 to 10
+			addi $t6, $zero, 0				# Initialize a counter ($t6) to 0 
+			
+			Loop5:
+				divu $s1, $t4				# $s1 / $t4 -- > Remainder in HIGH, Quotient in LOW
+				mflo $s1				# Set $s1 to the quotient
+				mfhi $t1				# Store the remainder (digit) in $t1
+				addi $t1, $t1, 48			# Add 48 (the char code of '0') to the remainder
+				
+				# Store the address of the stack pointer temporarily in $t2 and add the counter to it
+				la $t2, ($sp)
+				add $t2, $t2, $t6
+				
+				sb $t1, 0($t2)				# Store the least significant byte of $t1 to the stack
+				
+				# If the quotient is 0 --> Exit the loop to Loop6
+				beq $s1, $zero, Loop6
+				
+				
+				addi $t6, $t6, 1			# Increment the counter
+			
+				j Loop5
+			
+			Loop6:
+				
+				# Store the address of the stack pointer temporarily in $t2 and add the counter to it
+				la $t2, ($sp)
+				add $t2, $t2, $t6
+				
+				
+				lb, $a0, 0($t2)
+				li $v0, 11
+				syscall
+				
+				beq $t6, $zero, Continue2		# If the counter is 0 exit loop to Continue2
+				
+				addi $t6, $t6, -1			# Decrement the counter
+				
+				j Loop6
+					
+			Continue2:
+				jal PrintNewLine
+				j Exit
 
-			# Prints the decimal value of $s1
-			sw $s1, decimal_result
-			li $v0, 36
-			lw $a0, decimal_result
-			syscall
-			j Exit
+		# --------------------------------------------------------------------------------------------------------------
 
-	
+
 		# Else, if input is invalid print error_message
 		Invalid:
 			li $v0, 4
