@@ -17,9 +17,9 @@
 .text
 	main:	
 		# Prompt the user for input
-		li $v0, 4
-		la $a0, prompt
-		syscall
+		# li $v0, 4
+		# la $a0, prompt
+		# syscall
 
 		# Get user input
 		li $v0, 8					# Tells system to get user input from the keyboard as text
@@ -144,9 +144,9 @@
 
 		PrintDec:
 			# Prints the msg, "The corresponding decimal value is: "
-			li $v0, 4
-			la $a0, decimal_value_msg
-			syscall
+			# li $v0, 4
+			# la $a0, decimal_value_msg
+			# syscall
 			
 			# We will divide $s1 by 10 until the quotient is zero
 			# We will store the char code of all the remainder digits on the stack
@@ -168,9 +168,8 @@
 				
 				sb $t1, 0($t2)				# Store the least significant byte of $t1 to the stack
 				
-				# If the quotient is 0 --> Exit the loop to Loop6
+				# If the quotient is 0 --> Exit the Loop to Loop6
 				beq $s1, $zero, Loop6
-				
 				
 				addi $t6, $t6, 1			# Increment the counter
 			
@@ -205,6 +204,9 @@
 			li $v0, 4
 			la $a0, error_msg
 			syscall
+			
+			jal PrintNewLine
+			
 			j Exit
 
 	
